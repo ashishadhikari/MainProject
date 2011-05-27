@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path=""/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="//Cs5/dept/Faculty/Corazza/courses/SWE425-0208/workspace/externalJars/jess.jar"/>
+	<classpathentry kind="lib" path="//Cs5/dept/Faculty/Corazza/courses/SWE425-0208/workspace/externalJars/junit.jar"/>
+	<classpathentry kind="lib" path="//Cs5/dept/Faculty/Corazza/courses/SWE425-0208/workspace/externalJars/mysql-connector-java-3.0.14-production-bin.jar"/>
+	<classpathentry kind="lib" path="//Cs5/dept/Faculty/Corazza/courses/SWE425-0208/workspace/externalJars/rulesencoding.jar"/>
+	<classpathentry kind="lib" path="//Cs5/dept/Faculty/Corazza/courses/SWE425-0508/workspace/externalJars/rulesengine.jar"/>
+	<classpathentry kind="output" path=""/>
+</classpath>
