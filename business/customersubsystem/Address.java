@@ -6,7 +6,7 @@ import business.externalinterfaces.IAddress;
 
 
 /**
- * @author pcorazza
+ * @author Peter
  * @since Nov 4, 2004
  * Class Description:
  * 
