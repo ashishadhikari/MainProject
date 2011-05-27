@@ -4,7 +4,9 @@ package business.productsubsystem;
 import business.externalinterfaces.IProductFromDb;
 import business.externalinterfaces.IProductFromGui;
 
-
+/*
+ * asdfadsf
+ */
 class Product implements IProductFromDb, IProductFromGui {
 
     private String productId;
