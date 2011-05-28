@@ -23,7 +23,7 @@ class DbClassCustomerProfile implements IDbClass {
     public void readCustomerProfile(String custId) throws DatabaseException {
         this.custId = custId;
         queryType=READ;
-        IDataAccessSubsystem dataAccess = new DataAccessSubsystemFacade();
+        IDataAccessSubsystem dataAccess = DataAccessSubsystemFacade.INSTANCE;
         dataAccess.read(this);
     }
  

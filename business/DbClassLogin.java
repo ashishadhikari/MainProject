@@ -25,7 +25,7 @@ public class DbClassLogin implements IDbClass {
         this.password = login.getPassword();
     }
     public boolean authenticate() throws DatabaseException {
-        dataAccess = new DataAccessSubsystemFacade();
+        dataAccess = DataAccessSubsystemFacade.INSTANCE;
         dataAccess.read(this);
         return authenticated;
         

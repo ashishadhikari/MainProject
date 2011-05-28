@@ -45,7 +45,7 @@ class DbClassProduct implements IDbClass {
 	 */
 	public TwoKeyHashMap<String,String,IProductFromDb> refreshProductTable() throws DatabaseException {
         queryType = LOAD_PROD_TABLE;
-        dataAccess = new DataAccessSubsystemFacade();
+        dataAccess = DataAccessSubsystemFacade.INSTANCE;
         dataAccess.read(this);
 		//return a clone since productTable must not be corrupted
         return productTable.clone();
