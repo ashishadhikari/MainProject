@@ -6,7 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 import middleware.DatabaseException;
 import middleware.DbConfigProperties;
+import middleware.dataaccess.DataAccessSubsystemFacade;
 import middleware.externalinterfaces.DbConfigKey;
+import middleware.externalinterfaces.IDataAccessSubsystem;
 import middleware.externalinterfaces.IDbClass;
 import business.externalinterfaces.ICustomerProfile;
 import business.externalinterfaces.IOrderItem;
@@ -27,6 +29,7 @@ class DbClassOrder implements IDbClass {
         //implement
     	this.customerProfile=customerProfile;
     	orderIds = new LinkedList<String>();
+    	IDataAccessSubsystem dataAccessSs = DataAccessSubsystemFacade.INSTANCE;
     	return orderIds;
         
         
