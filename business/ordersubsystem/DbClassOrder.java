@@ -31,8 +31,6 @@ class DbClassOrder implements IDbClass {
     	orderIds = new LinkedList<String>();
     	queryType = GET_ORDER_IDS;
     	DataAccessSubsystemFacade.INSTANCE.read(this);
-    	System.out.println("Printing Order Ids");
-    	System.out.println(orderIds);
     	return orderIds;
         
         
