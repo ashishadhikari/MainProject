@@ -13,6 +13,8 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
+import middleware.DatabaseException;
+
 import application.gui.AddEditCatalog;
 import application.gui.AddEditProduct;
 import application.gui.CustomTableModel;
@@ -22,6 +24,8 @@ import application.gui.MaintainCatalogTypes;
 import application.gui.MaintainProductCatalog;
 import business.SessionContext;
 import business.externalinterfaces.CustomerConstants;
+import business.externalinterfaces.IProductFromGui;
+import business.productsubsystem.ProductSubsystemFacade;
 
 public enum ManageProductsController implements CleanupControl  {
 	//This makes ManageProductsController a Singleton. Since controllers
@@ -274,11 +278,18 @@ public enum ManageProductsController implements CleanupControl  {
 	// control AddEditCatalog
 	class SaveAddEditCatListener implements ActionListener {
         public void actionPerformed(ActionEvent evt) {
-				JOptionPane.showMessageDialog(addEditCatalog, 
-										  "Need to write code for this!", 
-										  "Information", 
-										  JOptionPane.INFORMATION_MESSAGE); 
- 
+        	String name = "Cosmetics";
+//				JOptionPane.showMessageDialog(addEditCatalog, 
+//										  "Need to write code for this!", 
+//										  "Information", 
+//										  JOptionPane.INFORMATION_MESSAGE); 
+        	ProductSubsystemFacade psf = new  ProductSubsystemFacade();
+        	try {
+				psf.saveNewCatalogName(name);
+			} catch (DatabaseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         }
 	}
 	/**
@@ -297,10 +308,27 @@ public enum ManageProductsController implements CleanupControl  {
 	
 	class SaveAddEditProductListener implements ActionListener {
         public void actionPerformed(ActionEvent evt) {
-				JOptionPane.showMessageDialog(addEditProduct, 
-										  "Need to write code for this!", 
-										  "Information", 
-										  JOptionPane.INFORMATION_MESSAGE); 
+        	    String productId = "";
+        	    String productName = "SE";
+        	    String quantity = "50";
+        	    String unitPrice = "2";
+        	    String mfgDate = "1-1-11";
+        	    String catalogId = "1";
+        	    String description = "This is the most wonderful book of software engineering";
+        	    String catalogType = "1";
+        	    
+        		ProductSubsystemFacade psf = new ProductSubsystemFacade();
+        		IProductFromGui p = psf.createProduct(productId, productName, quantity, unitPrice, mfgDate, catalogId, description);
+        		try {
+					psf.saveNewProduct(p,catalogType);
+				} catch (DatabaseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+//				JOptionPane.showMessageDialog(addEditProduct, 
+//										  "Need to write code for this!", 
+//										  "Information", 
+//										  JOptionPane.INFORMATION_MESSAGE); 
  
         }
 	}
