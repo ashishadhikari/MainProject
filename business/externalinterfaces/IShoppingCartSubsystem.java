@@ -62,4 +62,6 @@ public interface IShoppingCartSubsystem {
 	public void makeSavedCartLive();
 
 	public void saveLiveCart() throws DatabaseException;
+
+	public void setCustomerProfile(ICustomerProfile customerProfile);
 }
