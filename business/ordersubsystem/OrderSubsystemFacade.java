@@ -5,6 +5,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Logger;
 import middleware.DatabaseException;
+import middleware.dataaccess.DataAccessSubsystemFacade;
 import middleware.dataaccess.DataAccessUtil;
 import business.externalinterfaces.ICartItem;
 import business.externalinterfaces.ICustomerProfile;
@@ -14,6 +15,7 @@ import business.externalinterfaces.IOrderSubsystem;
 import business.externalinterfaces.IShoppingCart;
 
 public class OrderSubsystemFacade implements IOrderSubsystem {
+
 	Logger log = Logger.getLogger(this.getClass().getPackage().getName());
 	ICustomerProfile customerProfile;
 
@@ -31,7 +33,7 @@ public class OrderSubsystemFacade implements IOrderSubsystem {
 		return new DbClassOrder().getOrderItems(orderId);
 	}
 
-	Order getOrderData(String orderId) throws DatabaseException {
+	IOrder getOrderData(String orderId) throws DatabaseException {
 		// need to implement -- finished
 		return new DbClassOrder().getOrderData(orderId);
 	}
@@ -54,7 +56,8 @@ public class OrderSubsystemFacade implements IOrderSubsystem {
 		List<IOrderItem> orderItems = new ArrayList<IOrderItem>();
 		double totalPrice = 0;
 		for (ICartItem cartItem : shopCart.getCartItems()) {
-			orderItems.add(OrderUtil.createOrderItemFromCartItem(orderId, cartItem));
+			orderItems.add(OrderUtil.createOrderItemFromCartItem(orderId,
+					cartItem));
 			totalPrice += Double.parseDouble(cartItem.getTotalprice());
 		}
 		Order order = new Order(orderId, new GregorianCalendar().getTime()
@@ -62,6 +65,11 @@ public class OrderSubsystemFacade implements IOrderSubsystem {
 		order.setBillingAddress(shopCart.getBillingAddress());
 		order.setShippingAddress(shopCart.getShippingAddress());
 		order.setPaymentInfo(shopCart.getPaymentInfo());
+		order.setOrderItems(orderItems);
+		new DbClassOrder(order, customerProfile).submitOrder();
+		for (IOrderItem orderItem : order.getOrderItems()) {
+			new DbClassOrderItem(orderItem).submitOrderItem();
+		}
 
 	}
 
