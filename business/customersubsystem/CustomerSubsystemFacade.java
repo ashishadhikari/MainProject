@@ -36,7 +36,7 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 		// --
 		// he may or may not decide to use it
 		shoppingCartSubsystem = ShoppingCartSubsystemFacade.INSTANCE;
-		// shoppingCartSubsystem.setCustomerProfile(customerProfile);
+//		shoppingCartSubsystem.setCustomerProfile(customerProfile);
 		shoppingCartSubsystem.retrieveSavedCart(customerProfile);
 
 		// retrieve the order history for the customer and store here

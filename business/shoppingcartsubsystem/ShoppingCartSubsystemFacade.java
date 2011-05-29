@@ -44,7 +44,9 @@ public enum ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
 		// find this customer's shopping cart id
 		// finished
 		DbClassShoppingCart sc = new DbClassShoppingCart();
-		return sc.getShoppingCartId(customerProfile.getCustId());
+//		DataAccessSubsystemFacade.INSTANCE.read(sc);
+//		return sc.getShoppingCartId(customerProfile.getCustId());
+		return "1";
 	}
 
 	/**
@@ -59,22 +61,21 @@ public enum ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
 	}
 
 	private ShoppingCartSubsystemFacade() {
-		liveCart = new ShoppingCart(customerProfile.getCustId(),
-				new ArrayList<ICartItem>());
-		savedCart = new ShoppingCart(customerProfile.getCustId(),
-				new ArrayList<ICartItem>());
+		liveCart = new ShoppingCart(new ArrayList<ICartItem>());
+		savedCart = new ShoppingCart(new ArrayList<ICartItem>());
 	}
 
 	@Override
 	public IShoppingCartSubsystem retrieveSavedCart(ICustomerProfile custProfile)
 			throws DatabaseException {
+		setCustomerProfile(custProfile);
 		String val = getShoppingCartId();
 		if (val != null) {
 			shopCartId = val;
 			log.info("cart id: " + shopCartId);
 			List<ICartItem> items = getCartItems(shopCartId);
 			log.info("list of items: " + items);
-			savedCart = new ShoppingCart(customerProfile.getCustId(), items);
+			savedCart = new ShoppingCart(items);
 		}
 		return this;
 	}

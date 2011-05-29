@@ -59,6 +59,7 @@ public class DbClassShoppingCart implements IDbClass {
 
 	public String getShoppingCartId(String custId) throws DatabaseException {
 		this.custId = custId;
+		queryType = GET_ID;
 		// implement
 		return "1";
 	}
@@ -66,6 +67,7 @@ public class DbClassShoppingCart implements IDbClass {
 	public List<ICartItem> getSavedCartItems(String cartId)
 			throws DatabaseException {
 		this.cartId = cartId;
+		queryType = GET_SAVED_ITEMS;
 		// implement
 		return new LinkedList<ICartItem>();
 

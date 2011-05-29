@@ -14,12 +14,16 @@ public class ShoppingCart implements IShoppingCart {
 	private IAddress shippingAddress;
 	private IAddress billingAddress;
 
-	public ShoppingCart(String customerId, List<ICartItem> cartItems) {
-		this.customerId = customerId;
+	public ShoppingCart(List<ICartItem> cartItems) {
 		if (cartItems == null)
 			this.cartItems = new LinkedList<ICartItem>();
 		else
 			this.cartItems = cartItems;
+	}
+	
+	public ShoppingCart(String customerId, List<ICartItem> cartItems) {
+		this(cartItems);
+		this.customerId = customerId;
 	}
 	
 	public void add(ICartItem cartItem) {

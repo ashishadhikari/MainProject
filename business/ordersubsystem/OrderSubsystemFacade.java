@@ -9,6 +9,7 @@ import business.externalinterfaces.ICustomerProfile;
 import business.externalinterfaces.IOrder;
 import business.externalinterfaces.IOrderItem;
 import business.externalinterfaces.IOrderSubsystem;
+import business.externalinterfaces.IShoppingCart;
 
 
 public class OrderSubsystemFacade implements IOrderSubsystem {
@@ -41,6 +42,19 @@ public class OrderSubsystemFacade implements IOrderSubsystem {
         return new ArrayList<IOrder>();
         
     }
+
+	@Override
+	public void submitOrder(IShoppingCart shopCart) throws DatabaseException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public IOrderItem createOrderItem(String prodId, String orderId,
+			String quantityReq, String totalPrice) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
         
  
