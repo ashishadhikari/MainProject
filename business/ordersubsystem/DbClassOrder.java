@@ -9,6 +9,8 @@ import middleware.DbConfigProperties;
 import middleware.dataaccess.DataAccessSubsystemFacade;
 import middleware.externalinterfaces.DbConfigKey;
 import middleware.externalinterfaces.IDbClass;
+import business.externalinterfaces.IAddress;
+import business.externalinterfaces.ICartItem;
 import business.externalinterfaces.ICustomerProfile;
 import business.externalinterfaces.IOrder;
 import business.externalinterfaces.IOrderItem;
@@ -28,17 +30,17 @@ class DbClassOrder implements IDbClass {
 
 	public DbClassOrder() {
 	}
-	
+
 	public DbClassOrder(IOrder order, ICustomerProfile customerProfile) {
 		this.orderData = order;
 		this.customerProfile = customerProfile;
 	}
-	
+
 	public void submitOrder() throws DatabaseException {
 		this.queryType = SAVE_ORDER;
 		DataAccessSubsystemFacade.INSTANCE.save(this);
 	}
-	
+
 	public List<String> getAllOrderIds(ICustomerProfile customerProfile)
 			throws DatabaseException {
 		// implement -- finished
@@ -82,9 +84,29 @@ class DbClassOrder implements IDbClass {
 	}
 
 	private void buildSaveOrderQuery() {
-		//TODO copy and paste from Rajesh
-		query = "INSERT INTO Ord VALUES();";
-		
+		// for shipping address
+		IAddress shipAddress = orderData.getShippingAddress();
+		String shipingAddress1 = shipAddress.getStreet1();
+		String shppingAddress2 = shipAddress.getStreet2();
+		String shippingCity = shipAddress.getCity();
+		String shippingState = shipAddress.getState();
+		String shippingZip = shipAddress.getZip();
+
+		// for billing address
+		IAddress billAddress = orderData.getBillingAddress();
+		String billingAddress1 = billAddress.getStreet1();
+		String billingAddress2 = billAddress.getStreet2();
+		String billingCity = billAddress.getCity();
+		String billingState = billAddress.getState();
+		String billingZip = billAddress.getZip();
+
+		query = "INSERT INTO Ord VALUES(" + orderData.getOrderId() + ", "
+				+ customerProfile.getCustId() + ", " + shipingAddress1 + ", "
+				+ shppingAddress2 + ", " + shippingCity + ", " + shippingState
+				+ ", " + shippingZip + ", " + billingAddress1 + ", "
+				+ billingAddress2 + ", " + billingCity + ", " + billingState
+				+ ", " + billingZip + ");";
+
 	}
 
 	private void buildGetOrderDataQuery() {
