@@ -25,5 +25,9 @@ public interface IShoppingCart {
 	IAddress getBillingAddress();
 
 	void setBillingAddress(IAddress billingAddress);
+	
+	ICreditCard getPaymentInfo();
+	
+	void setPaymentInfo(ICreditCard paymentInfo);
 
 }

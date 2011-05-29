@@ -5,6 +5,7 @@ import java.util.List;
 
 import business.externalinterfaces.IAddress;
 import business.externalinterfaces.ICartItem;
+import business.externalinterfaces.ICreditCard;
 import business.externalinterfaces.IShoppingCart;
 
 public class ShoppingCart implements IShoppingCart {
@@ -13,6 +14,7 @@ public class ShoppingCart implements IShoppingCart {
 	private List<ICartItem> cartItems;
 	private IAddress shippingAddress;
 	private IAddress billingAddress;
+	private ICreditCard paymentInfo;
 
 	public ShoppingCart(List<ICartItem> cartItems) {
 		if (cartItems == null)
@@ -60,6 +62,14 @@ public class ShoppingCart implements IShoppingCart {
 
 	public void setBillingAddress(IAddress billingAddress) {
 		this.billingAddress = billingAddress;
+	}
+
+	public ICreditCard getPaymentInfo() {
+		return paymentInfo;
+	}
+
+	public void setPaymentInfo(ICreditCard creditCard) {
+		this.paymentInfo = creditCard;
 	}
 	
 	
