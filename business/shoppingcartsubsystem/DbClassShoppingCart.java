@@ -100,6 +100,7 @@ public class DbClassShoppingCart implements IDbClass {
 
 	public String getShoppingCartId(String custId) throws DatabaseException {
 		this.custId = custId;
+		queryType = GET_ID;
 		// implement
 		this.queryType = GET_ID;
 		DataAccessSubsystemFacade.INSTANCE.read(this);
@@ -116,6 +117,7 @@ public class DbClassShoppingCart implements IDbClass {
 	public List<ICartItem> getSavedCartItems(String cartId)
 			throws DatabaseException {
 		this.cartId = cartId;
+		queryType = GET_SAVED_ITEMS;
 		// implement
 		this.queryType = GET_SAVED_ITEMS;
 		DataAccessSubsystemFacade.INSTANCE.read(this);
