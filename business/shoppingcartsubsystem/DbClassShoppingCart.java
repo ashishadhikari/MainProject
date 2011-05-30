@@ -93,7 +93,7 @@ public class DbClassShoppingCart implements IDbClass {
 	private void buildGetSavedItemsQuery() {
 		// implement
 		query = "SELECT cartitemid, productid, quantity, totalprice "
-				+ "FROM shopcartitem " + "where shoppingcartid='" + cartId
+				+ "FROM ShopCartItem " + "where shopcartid='" + cartId
 				+ "';";
 
 	}
