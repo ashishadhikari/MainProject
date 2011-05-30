@@ -67,7 +67,7 @@ public class DbClassShoppingCart implements IDbClass {
 		// calculating prices
 		double totalPriceAmount = 0;
 
-		for (ICartItem cit : cartItemsList) {
+		for (ICartItem cit : cart.getCartItems()) {
 			String tp = cit.getTotalprice();
 			double tpp = Double.parseDouble(tp);
 			totalPriceAmount += tpp;
@@ -100,15 +100,13 @@ public class DbClassShoppingCart implements IDbClass {
 
 	public String getShoppingCartId(String custId) throws DatabaseException {
 		this.custId = custId;
-		queryType = GET_ID;
 		// implement
 		this.queryType = GET_ID;
 		DataAccessSubsystemFacade.INSTANCE.read(this);
 		return cartId;
 	}
 
-	public void setCartItems(String cartId) throws DatabaseException {
-		this.cartId = cartId;
+	public void saveCart() throws DatabaseException {
 		// implement
 		this.queryType = SAVE_LIVE_CART;
 		DataAccessSubsystemFacade.INSTANCE.save(this);
