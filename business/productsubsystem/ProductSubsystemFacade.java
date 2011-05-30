@@ -32,37 +32,34 @@ public class ProductSubsystemFacade implements IProductSubsystem {
 		dbclass.setQuantity(quantity);
 		dbclass.readQuantityAvail(prodName);
 
-				
-	}    
-	
+	}
+
 	/** creates an IProductFromGui when user creates a product */
-	public IProductFromGui createProduct(String productId, String productName, String quantity, String uintPrice,String mfgDate, String catalogId, String description){
-		Product p = new Product(productId,  productName,  quantity,  uintPrice,  mfgDate,  catalogId,  description);
+	public IProductFromGui createProduct(String productId, String productName,
+			String quantity, String uintPrice, String mfgDate,
+			String catalogId, String description) {
+		Product p = new Product(productId, productName, quantity, uintPrice,
+				mfgDate, catalogId, description);
 		return p;
 	}
-	
-//note: don't invoke rules for quantity from here
-	
-	public void saveNewProduct(IProductFromGui product, String catalogType) throws DatabaseException{
-		
+
+	// note: don't invoke rules for quantity from here
+
+	public void saveNewProduct(IProductFromGui product, String catalogType)
+			throws DatabaseException {
+
 		DbClassProduct dbClass = new DbClassProduct();
-		dbClass.saveProductData(product,catalogType);
-		
+		dbClass.saveProductData(product, catalogType);
+
 	}
-	
-	public void saveNewCatalogName(String name) throws DatabaseException{
+
+	public void saveNewCatalogName(String name) throws DatabaseException {
 		DbClassProduct dbClass = new DbClassProduct();
 		dbClass.buildSaveCatalogQuery(name);
 	}
-	
-	public IProductFromDb getProductFromId(String prodId) throws DatabaseException{
-		DbClassProduct dbClass = new DbClassProduct();
-		
-		dbClass.getProductFromId(prodId);
-		
-		IProductFromDb productDetails = null;
-		
-		return null;
+
+	public IProductFromDb getProductFromId(String prodId) throws DatabaseException {
+		return (new DbClassProduct().getProductFromId(prodId));
 	}
 
 }

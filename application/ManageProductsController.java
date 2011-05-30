@@ -283,8 +283,7 @@ public enum ManageProductsController implements CleanupControl  {
 //				JOptionPane.showMessageDialog(addEditCatalog, 
 //										  "Need to write code for this!", 
 //										  "Information", 
-//										  JOptionPane.INFORMATION_MESSAGE);
-        	
+        	//TODO get the product ID from the event
         	
         	ProductSubsystemFacade psf = new  ProductSubsystemFacade();
         	try {
