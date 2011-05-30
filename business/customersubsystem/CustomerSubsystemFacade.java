@@ -2,6 +2,7 @@ package business.customersubsystem;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 import middleware.DatabaseException;
 import middleware.EBazaarException;
@@ -16,7 +17,7 @@ import business.ordersubsystem.OrderSubsystemFacade;
 import business.shoppingcartsubsystem.ShoppingCartSubsystemFacade;
 
 public class CustomerSubsystemFacade implements ICustomerSubsystem {
-
+	private Logger logger=Logger.getLogger(CustomerSubsystemFacade.class.getName());
 	IShoppingCartSubsystem shoppingCartSubsystem;
 	IOrderSubsystem orderSubsystem;
 	List<IOrder> orderHistory;
@@ -26,6 +27,7 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 	CustomerProfile customerProfile;
 
 	public void initializeCustomer(String id) throws DatabaseException {
+		logger.info("The customer id is "+id);
 		loadCustomerProfile(id);
 
 		loadDefaultShipAddress();
@@ -38,11 +40,11 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 		shoppingCartSubsystem = ShoppingCartSubsystemFacade.INSTANCE;
 		shoppingCartSubsystem.setCustomerProfile(customerProfile);
 		shoppingCartSubsystem.retrieveSavedCart();
-
+		
 		// retrieve the order history for the customer and store here
 		orderSubsystem = new OrderSubsystemFacade(customerProfile);
 		orderHistory = orderSubsystem.getOrderHistory();
-
+		logger.info("The customer has "+orderHistory.size()+ " orders.");
 	}
 
 	void loadCustomerProfile(String custId) throws DatabaseException {
