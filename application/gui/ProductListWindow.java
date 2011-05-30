@@ -66,7 +66,7 @@ public class ProductListWindow extends javax.swing.JWindow implements ParentWind
 	
 	//should be set to 'false' if data for table is obtained from a database
 	//or some external file
-	private final boolean USE_DEFAULT_DATA = true;
+	private final boolean USE_DEFAULT_DATA = false;
 	private final String SELECT = "Select";
 	private final String BACK = "Back";
 	

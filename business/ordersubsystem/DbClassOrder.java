@@ -9,7 +9,10 @@ import middleware.DbConfigProperties;
 import middleware.dataaccess.DataAccessSubsystemFacade;
 import middleware.externalinterfaces.DbConfigKey;
 import middleware.externalinterfaces.IDbClass;
+import business.externalinterfaces.IAddress;
+import business.externalinterfaces.ICartItem;
 import business.externalinterfaces.ICustomerProfile;
+import business.externalinterfaces.IOrder;
 import business.externalinterfaces.IOrderItem;
 
 class DbClassOrder implements IDbClass {
@@ -18,11 +21,25 @@ class DbClassOrder implements IDbClass {
 	private final String GET_ORDER_ITEMS = "GetOrderItems";
 	private final String GET_ORDER_IDS = "GetOrderIds";
 	private final String GET_ORDER_DATA = "GetOrderData";
+	private final String SAVE_ORDER = "SaveOrder";
 	private ICustomerProfile customerProfile;
 	private String orderId;
 	private List<String> orderIds;
 	private List<IOrderItem> orderItems;
-	private Order orderData;
+	private IOrder orderData;
+
+	public DbClassOrder() {
+	}
+
+	public DbClassOrder(IOrder order, ICustomerProfile customerProfile) {
+		this.orderData = order;
+		this.customerProfile = customerProfile;
+	}
+
+	public void submitOrder() throws DatabaseException {
+		this.queryType = SAVE_ORDER;
+		DataAccessSubsystemFacade.INSTANCE.save(this);
+	}
 
 	public List<String> getAllOrderIds(ICustomerProfile customerProfile)
 			throws DatabaseException {
@@ -34,7 +51,7 @@ class DbClassOrder implements IDbClass {
 
 	}
 
-	public Order getOrderData(String orderId) throws DatabaseException {
+	public IOrder getOrderData(String orderId) throws DatabaseException {
 		// implement -- finished
 		this.orderId = orderId;
 		this.queryType = GET_ORDER_DATA;
@@ -60,7 +77,35 @@ class DbClassOrder implements IDbClass {
 			buildGetOrderIdsQuery();
 		} else if (queryType.equals(GET_ORDER_DATA)) {
 			buildGetOrderDataQuery();
+		} else if (queryType.equals(SAVE_ORDER)) {
+			buildSaveOrderQuery();
 		}
+
+	}
+
+	private void buildSaveOrderQuery() {
+		// for shipping address
+		IAddress shipAddress = orderData.getShippingAddress();
+		String shipingAddress1 = shipAddress.getStreet1();
+		String shppingAddress2 = shipAddress.getStreet2();
+		String shippingCity = shipAddress.getCity();
+		String shippingState = shipAddress.getState();
+		String shippingZip = shipAddress.getZip();
+
+		// for billing address
+		IAddress billAddress = orderData.getBillingAddress();
+		String billingAddress1 = billAddress.getStreet1();
+		String billingAddress2 = billAddress.getStreet2();
+		String billingCity = billAddress.getCity();
+		String billingState = billAddress.getState();
+		String billingZip = billAddress.getZip();
+
+		query = "INSERT INTO Ord VALUES(" + orderData.getOrderId() + ", "
+				+ customerProfile.getCustId() + ", " + shipingAddress1 + ", "
+				+ shppingAddress2 + ", " + shippingCity + ", " + shippingState
+				+ ", " + shippingZip + ", " + billingAddress1 + ", "
+				+ billingAddress2 + ", " + billingCity + ", " + billingState
+				+ ", " + billingZip + ");";
 
 	}
 

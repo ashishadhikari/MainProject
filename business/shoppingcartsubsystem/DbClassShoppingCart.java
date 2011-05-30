@@ -1,14 +1,18 @@
 package business.shoppingcartsubsystem;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
 import middleware.DatabaseException;
 import middleware.DbConfigProperties;
+import middleware.dataaccess.DataAccessSubsystemFacade;
+import middleware.dataaccess.DataAccessUtil;
 import middleware.externalinterfaces.DbConfigKey;
 import middleware.externalinterfaces.IDataAccessSubsystem;
 import middleware.externalinterfaces.IDbClass;
+import business.externalinterfaces.IAddress;
 import business.externalinterfaces.ICartItem;
 import business.externalinterfaces.IShoppingCart;
 
@@ -44,24 +48,68 @@ public class DbClassShoppingCart implements IDbClass {
 
 	private void buildSaveLiveCartQuery() {
 		// implement
-		query = "";
+		// for shipping address
+		IAddress sadr = cart.getShippingAddress();
+		String shipingAddress1 = sadr.getStreet1();
+		String shppingAddress2 = sadr.getStreet2();
+		String shippingCity = sadr.getCity();
+		String shippingState = sadr.getState();
+		String shippingZip = sadr.getZip();
+
+		// for billing address
+		IAddress badr = cart.getBillingAddress();
+		String billingAddress1 = badr.getStreet1();
+		String billingAddress2 = badr.getStreet2();
+		String billingCity = badr.getCity();
+		String billingState = badr.getState();
+		String billingZip = badr.getZip();
+
+		// calculating prices
+		double totalPriceAmount = 0;
+
+		for (ICartItem cit : cart.getCartItems()) {
+			String tp = cit.getTotalprice();
+			double tpp = Double.parseDouble(tp);
+			totalPriceAmount += tpp;
+		}
+
+		// }
+
+		
+		query = "INSERT INTO ShopCartTbl VALUES(" + cartId + "," + custId + ","
+				+ shipingAddress1 + "," + shppingAddress2 + "," + shippingCity
+				+ "," + shippingState + "," + shippingZip + ","
+				+ billingAddress1 + "," + billingAddress2 + "," + billingCity
+				+ "," + billingState + "," + billingZip + "," + null + ","
+				+ null + "," + null + "," + null + "," + totalPriceAmount + ","
+				+ 0.0 + "," + 0.0 + "," + totalPriceAmount + ") ";
 	}
 
 	private void buildGetIdQuery() {
-		query = "SELECT shopcartid FROM ShopCartTbl WHERE custid = '" + custId + "';";
+		query = "SELECT shopcartid FROM ShopCartTbl WHERE custid = '" + custId
+				+ "';";
 	}
 
 	private void buildGetSavedItemsQuery() {
 		// implement
-		query = "";
+		query = "SELECT cartitemid, productid, quantity, totalprice "
+				+ "FROM ShopCartItem " + "where shopcartid='" + cartId
+				+ "';";
 
 	}
 
 	public String getShoppingCartId(String custId) throws DatabaseException {
 		this.custId = custId;
-		queryType = GET_ID;
 		// implement
-		return "1";
+		this.queryType = GET_ID;
+		DataAccessSubsystemFacade.INSTANCE.read(this);
+		return cartId;
+	}
+
+	public void saveCart() throws DatabaseException {
+		// implement
+		this.queryType = SAVE_LIVE_CART;
+		DataAccessSubsystemFacade.INSTANCE.save(this);
 	}
 
 	public List<ICartItem> getSavedCartItems(String cartId)
@@ -69,7 +117,10 @@ public class DbClassShoppingCart implements IDbClass {
 		this.cartId = cartId;
 		queryType = GET_SAVED_ITEMS;
 		// implement
-		return new LinkedList<ICartItem>();
+		this.queryType = GET_SAVED_ITEMS;
+		DataAccessSubsystemFacade.INSTANCE.read(this);
+		return cartItemsList;
+		// return new LinkedList<ICartItem>();
 
 	}
 
@@ -82,13 +133,38 @@ public class DbClassShoppingCart implements IDbClass {
 
 	}
 
-	private void populateShopCartId(ResultSet rs) {
+	private void populateShopCartId(ResultSet rs) throws DatabaseException {
 		// implement
+		if (rs != null) {
+			try {
+				while (rs.next()) {
+					cartId = rs.getString("shopcartid");
+				}
+			} catch (SQLException e) {
+				throw new DatabaseException(e);
+			}
+		}
 
 	}
 
 	private void populateCartItemsList(ResultSet rs) throws DatabaseException {
 		// implement
+		cartItemsList = new LinkedList<ICartItem>();
+		if (rs != null) {
+			try {
+				while (rs.next()) {
+					String cartitemid = rs.getString("cartitemid");
+					String productid = rs.getString("productid");
+					String quantity = rs.getString("quantity");
+					String totalPrice = rs.getString("totalprice");
+					cartItemsList.add(new CartItem(cartitemid, productid, "12",
+							quantity, totalPrice, true));
+				}
+			} catch (SQLException e) {
+				throw new DatabaseException(e);
+			}
+		}
+
 	}
 
 	public String getDbUrl() {
