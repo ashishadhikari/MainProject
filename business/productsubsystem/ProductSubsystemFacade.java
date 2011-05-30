@@ -6,7 +6,7 @@
  */
 package business.productsubsystem;
 
-import java.util.Iterator;
+import java.util.List;
 
 import business.DbClassQuantity;
 import business.Quantity;
@@ -62,4 +62,20 @@ public class ProductSubsystemFacade implements IProductSubsystem {
 		return (new DbClassProduct().getProductFromId(prodId));
 	}
 
+	public IProductFromDb getProductFromName(String prodName) throws DatabaseException{
+		return (new DbClassProduct().getProductFromString(prodName));
+	}
+	
+	public String getProductIdFromName(String prodName) throws DatabaseException{
+		return (new DbClassProduct().getProductIdFromName(prodName));
+	}
+	
+	public List<IProductFromDb> getProductList(String catType) throws DatabaseException {
+		return (new DbClassProduct().getProductList(catType));
+	}
+	
+	/** like getProductList, but forces a database read */
+	public List<IProductFromDb> refreshProductList(String catType) throws DatabaseException {
+		return (new DbClassProduct().refreshProductList(catType));
+	}
 }
