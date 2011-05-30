@@ -8,7 +8,7 @@ import middleware.externalinterfaces.IDataAccessSubsystem;
 public class MiddlewareCleanup implements Cleanup {
     public void cleanup() {
 		//release database connections
-		IDataAccessSubsystem dass = new DataAccessSubsystemFacade();
+		IDataAccessSubsystem dass = DataAccessSubsystemFacade.INSTANCE;
 		dass.releaseConnections(this);
     }
 }

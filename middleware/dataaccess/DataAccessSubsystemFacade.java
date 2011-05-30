@@ -20,7 +20,12 @@ import middleware.externalinterfaces.IDbClass;
  */
 public class DataAccessSubsystemFacade implements IDataAccessSubsystem, IDataAccessTest {
     
-
+	public static final DataAccessSubsystemFacade INSTANCE = new DataAccessSubsystemFacade();
+	
+	private DataAccessSubsystemFacade() {
+	}
+	
+	
     public void read(IDbClass dbClass) throws DatabaseException {
         if(dbClass != null){
             DbAction dbAction = new DbAction(dbClass);

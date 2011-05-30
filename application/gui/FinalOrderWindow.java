@@ -57,7 +57,7 @@ public class FinalOrderWindow extends JWindow implements ParentWindow {
 	
 	
 	//table
-	private final boolean USE_DEFAULT_DATA = true;
+	private final boolean USE_DEFAULT_DATA = false;
 		
 	
    	private final String ITEM = "Item";

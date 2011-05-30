@@ -33,7 +33,7 @@ public class DbClassQuantity implements IDbClass {
     	this.productName = productName;
     	
         queryType=READ;
-        dataAccess = new DataAccessSubsystemFacade();
+        dataAccess = DataAccessSubsystemFacade.INSTANCE;
         dataAccess.read(this); 
         
     }

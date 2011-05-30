@@ -41,7 +41,7 @@ class DbClassAddress implements IDbClass {
     public void saveAddress(CustomerProfile customerProfile) throws DatabaseException {
         this.customerProfile = customerProfile;
         queryType = SAVE;
-        dataAccess = new DataAccessSubsystemFacade();
+        dataAccess = DataAccessSubsystemFacade.INSTANCE;
         dataAccess.save(this);
     }
     
@@ -75,19 +75,19 @@ class DbClassAddress implements IDbClass {
     void readDefaultShipAddress(CustomerProfile customerProfile) throws DatabaseException {
         this.customerProfile = customerProfile;
         queryType=READ_DEFAULT_SHIP;
-        dataAccess = new DataAccessSubsystemFacade();
+        dataAccess = DataAccessSubsystemFacade.INSTANCE;
         dataAccess.read(this);   
     }
     void readDefaultBillAddress(CustomerProfile customerProfile) throws DatabaseException {
         this.customerProfile = customerProfile;
         queryType=READ_DEFAULT_BILL;
-        dataAccess = new DataAccessSubsystemFacade();
+        dataAccess = DataAccessSubsystemFacade.INSTANCE;
         dataAccess.read(this);   
     }    
     void readAllAddresses(CustomerProfile customerProfile) throws DatabaseException {
         this.customerProfile = customerProfile;
         queryType = READ;
-        dataAccess = new DataAccessSubsystemFacade();
+        dataAccess = DataAccessSubsystemFacade.INSTANCE;
         dataAccess.read(this);    
         
     }

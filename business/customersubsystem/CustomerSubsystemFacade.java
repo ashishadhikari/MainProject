@@ -18,6 +18,8 @@ import business.shoppingcartsubsystem.ShoppingCartSubsystemFacade;
 
 public class CustomerSubsystemFacade implements ICustomerSubsystem {
 	private Logger logger=Logger.getLogger(CustomerSubsystemFacade.class.getName());
+	
+
 	IShoppingCartSubsystem shoppingCartSubsystem;
 	IOrderSubsystem orderSubsystem;
 	List<IOrder> orderHistory;
@@ -27,7 +29,6 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 	CustomerProfile customerProfile;
 
 	public void initializeCustomer(String id) throws DatabaseException {
-		logger.info("The customer id is "+id);
 		loadCustomerProfile(id);
 
 		loadDefaultShipAddress();
@@ -38,14 +39,15 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 		// --
 		// he may or may not decide to use it
 		shoppingCartSubsystem = ShoppingCartSubsystemFacade.INSTANCE;
-		shoppingCartSubsystem.setCustomerProfile(customerProfile);
-		shoppingCartSubsystem.retrieveSavedCart();
-		
+//		shoppingCartSubsystem.setCustomerProfile(customerProfile);
+		shoppingCartSubsystem.retrieveSavedCart(customerProfile);
+
 		// retrieve the order history for the customer and store here
 		orderSubsystem = new OrderSubsystemFacade(customerProfile);
 		orderHistory = orderSubsystem.getOrderHistory();
-		logger.info("The customer has "+orderHistory.size()+ " orders.");
+
 	}
+
 
 	void loadCustomerProfile(String custId) throws DatabaseException {
 		DbClassCustomerProfile dbclass = new DbClassCustomerProfile();
@@ -56,24 +58,27 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 	void loadDefaultShipAddress() throws DatabaseException {
 		// implement
 		// replace this line with the real default ship address
+
 		DbClassAddress dbClass = new DbClassAddress();
 		dbClass.readDefaultShipAddress(customerProfile);
 		defaultShipAddress = dbClass.getDefaultShipAddress();
+
 
 	}
 
 	void loadDefaultBillAddress() throws DatabaseException {
 		// implement
 		// replace this line with the real default ship address
+
 		DbClassAddress dbClass = new DbClassAddress();
 		dbClass.readDefaultBillAddress(customerProfile);
 		defaultBillAddress = dbClass.getDefaultBillAddress();
-
 	}
 
 	void loadDefaultPaymentInfo() throws DatabaseException {
 		// implement
 		// replace this line with real data
+
 		DbClassCreditCard dbClass = new DbClassCreditCard();
 		dbClass.readDefaultPaymentInfo(customerProfile.getCustId());
 		defaultPaymentInfo = dbClass.getDefaultPaymentInfo();

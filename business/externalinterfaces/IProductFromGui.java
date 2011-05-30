@@ -6,5 +6,6 @@ public interface IProductFromGui {
 	 public String getProductName();
 	 public String getQuantityAvail();
 	 public String getUnitPrice();
+	public String getDescription();
 	    
 }
