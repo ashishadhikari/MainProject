@@ -24,6 +24,7 @@ import application.gui.MaintainCatalogTypes;
 import application.gui.MaintainProductCatalog;
 import business.SessionContext;
 import business.externalinterfaces.CustomerConstants;
+import business.externalinterfaces.IProductFromDb;
 import business.externalinterfaces.IProductFromGui;
 import business.productsubsystem.ProductSubsystemFacade;
 
@@ -282,8 +283,19 @@ public enum ManageProductsController implements CleanupControl  {
 //				JOptionPane.showMessageDialog(addEditCatalog, 
 //										  "Need to write code for this!", 
 //										  "Information", 
-//										  JOptionPane.INFORMATION_MESSAGE); 
+//										  JOptionPane.INFORMATION_MESSAGE);
+        	
+        	
         	ProductSubsystemFacade psf = new  ProductSubsystemFacade();
+        	try {
+				IProductFromDb ipg =  psf.getProductFromId("1");
+				System.out.println(ipg.getDescription());
+			} catch (DatabaseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			System.exit(0);
         	try {
 				psf.saveNewCatalogName(name);
 			} catch (DatabaseException e) {

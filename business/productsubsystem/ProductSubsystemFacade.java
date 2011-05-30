@@ -6,6 +6,8 @@
  */
 package business.productsubsystem;
 
+import java.util.Iterator;
+
 import business.DbClassQuantity;
 import business.Quantity;
 import business.externalinterfaces.IProductFromDb;
@@ -57,8 +59,10 @@ public class ProductSubsystemFacade implements IProductSubsystem {
 		DbClassProduct dbClass = new DbClassProduct();
 		
 		dbClass.getProductFromId(prodId);
-		return null;
 		
+		IProductFromDb productDetails = null;
+		
+		return null;
 	}
 
 }

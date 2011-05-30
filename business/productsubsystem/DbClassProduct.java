@@ -29,7 +29,7 @@ class DbClassProduct implements IDbClass {
 	private final String SAVE_PROD_TABLE = "SaveProdTable";
 	//private final String LOAD_CAT_TABLE = "LoadCatTable";
 	private final String SAVE_CAT_TABLE = "SaveCatTable";
-	private String productId;
+	private int productId = 1;
 	
 	// Product related variables
 	private String name;
@@ -41,6 +41,10 @@ class DbClassProduct implements IDbClass {
 	
 	// Catalog related variables
 	private String catalogName;
+	
+	public static TwoKeyHashMap<String, String, IProductFromDb> getProductTable() {
+		return productTable;
+	}
 
 	/**
 	 * We are using this class also for saving, adding and deleting the Catalogs
@@ -123,7 +127,7 @@ class DbClassProduct implements IDbClass {
 
 	public void getProductFromId(String prodId) {
 		this.queryType = LOAD_PROD_IDS;
-		this.productId = prodId;
+		this.productId = Integer.parseInt(prodId);
 		try {
 			DataAccessSubsystemFacade.INSTANCE.read(this);
 		} catch (DatabaseException e) {
@@ -182,7 +186,9 @@ class DbClassProduct implements IDbClass {
 				String priceperunit = rs.getString("priceperunit");
 				String mfgdate = rs.getString("mfgdate");
 				String description = rs.getString("description");
-			   
+				System.out.println(productid);
+				Product p = new Product(productid, productname, totalquantity,  priceperunit,  mfgdate,  catalogid,  description);
+				productTable.put(productid, productname, p);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
