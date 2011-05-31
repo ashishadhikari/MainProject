@@ -25,8 +25,8 @@ class DbClassProduct implements IDbClass {
 	 * without extra db hits
 	 */
 	private static TwoKeyHashMap<String, String, IProductFromDb> productTable;
-	private List<IProductFromDb> productList;
-	private List<String[]> catalogNames;
+	private List<IProductFromDb> productList = new ArrayList<IProductFromDb>();
+	private List<String[]> catalogNames = new ArrayList<String[]>();
 
 	private String queryType;
 	private String query;
@@ -125,7 +125,7 @@ class DbClassProduct implements IDbClass {
 	}
 
 	private void buildProdFromNameQuery() {
-		query = "SELECT * from Product where productid = " + this.productName;
+		query = "SELECT * from Product where productname = '" + this.productName+ "'";
 	}
 
 	private void buildProdFromIdQuery() {
@@ -143,7 +143,7 @@ class DbClassProduct implements IDbClass {
 	 */
 	public List<String[]> getCatalogNames() throws DatabaseException {
 		if (catalogNames.isEmpty()) {
-			queryType = "GET_CAT_NAMES";
+			queryType = GET_CAT_NAMES;
 			dataAccess = DataAccessSubsystemFacade.INSTANCE;
 			dataAccess.read(this);
 			return catalogNames;
@@ -157,7 +157,7 @@ class DbClassProduct implements IDbClass {
 	 * @throws DatabaseException
 	 */
 	public List<String[]> refreshCatalogNames() throws DatabaseException {
-		queryType = "GET_CAT_NAMES";
+		queryType = GET_CAT_NAMES;
 		dataAccess = DataAccessSubsystemFacade.INSTANCE;
 		dataAccess.read(this);
 		return catalogNames;
@@ -171,10 +171,10 @@ class DbClassProduct implements IDbClass {
 	 */
 	public List<IProductFromDb> refreshProductList(String catType)
 			throws DatabaseException {
-		queryType = "GET_PROD_LIST";
+		queryType = GET_PROD_LIST;
 		this.catalogType = catType;
 		dataAccess = DataAccessSubsystemFacade.INSTANCE;
-		dataAccess.save(this);
+		dataAccess.read(this);
 		return productList;
 	}
 
@@ -185,8 +185,8 @@ class DbClassProduct implements IDbClass {
 	 */
 	public List<IProductFromDb> getProductList(String catType)
 			throws DatabaseException {
-		if (!(productList.isEmpty())) {
-			queryType = "GET_PROD_LIST";
+		if ((productList.isEmpty())) {
+			queryType = GET_PROD_LIST;
 			this.catalogType = catType;
 			dataAccess = DataAccessSubsystemFacade.INSTANCE;
 			dataAccess.read(this);
@@ -364,8 +364,7 @@ class DbClassProduct implements IDbClass {
 				String priceperunit = rs.getString("priceperunit");
 				String mfgdate = rs.getString("mfgdate");
 				String description = rs.getString("description");
-				System.out.println(productid);
-
+				
 				productList.add(new Product(productid, productname,
 						totalquantity, priceperunit, mfgdate, catalogid,
 						description));
@@ -397,7 +396,7 @@ class DbClassProduct implements IDbClass {
 				String priceperunit = rs.getString("priceperunit");
 				String mfgdate = rs.getString("mfgdate");
 				String description = rs.getString("description");
-				System.out.println(productid);
+				//System.out.println(productid);
 
 				productFromDb = new Product(productid, productname,
 						totalquantity, priceperunit, mfgdate, catalogid,
@@ -449,7 +448,7 @@ class DbClassProduct implements IDbClass {
 				String priceperunit = rs.getString("priceperunit");
 				String mfgdate = rs.getString("mfgdate");
 				String description = rs.getString("description");
-				System.out.println(productid);
+				//System.out.println(productid);
 
 				Product p = new Product(productid, productname, totalquantity,
 						priceperunit, mfgdate, catalogid, description);

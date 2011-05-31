@@ -280,21 +280,9 @@ public enum ManageProductsController implements CleanupControl  {
 	class SaveAddEditCatListener implements ActionListener {
         public void actionPerformed(ActionEvent evt) {
         	String name = "Cosmetics";
-//				JOptionPane.showMessageDialog(addEditCatalog, 
-//										  "Need to write code for this!", 
-//										  "Information", 
-        	//TODO get the product ID from the event
+   	//TODO get the product ID from the event
         	
         	ProductSubsystemFacade psf = new  ProductSubsystemFacade();
-        	try {
-				IProductFromDb ipg =  psf.getProductFromId("1");
-				System.out.println(ipg.getDescription());
-			} catch (DatabaseException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			
-			System.exit(0);
         	try {
 				psf.saveNewCatalogName(name);
 			} catch (DatabaseException e) {
@@ -319,7 +307,6 @@ public enum ManageProductsController implements CleanupControl  {
 	
 	class SaveAddEditProductListener implements ActionListener {
         public void actionPerformed(ActionEvent evt) {
-        	    String productId = "";
         	    String productName = "SE";
         	    String quantity = "50";
         	    String unitPrice = "2";
@@ -329,7 +316,7 @@ public enum ManageProductsController implements CleanupControl  {
         	    String catalogType = "1";
         	    
         		ProductSubsystemFacade psf = new ProductSubsystemFacade();
-        		IProductFromGui p = psf.createProduct(productId, productName, quantity, unitPrice, mfgDate, catalogId, description);
+        		IProductFromGui p = psf.createProduct(productName, mfgDate, quantity, unitPrice);
         		try {
 					psf.saveNewProduct(p,catalogType);
 				} catch (DatabaseException e) {
