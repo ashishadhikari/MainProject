@@ -12,6 +12,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import business.externalinterfaces.IProductSubsystem;
+import business.productsubsystem.ProductSubsystemFacade;
+
+import middleware.dataaccess.DataAccessSubsystemFacade;
+import middleware.externalinterfaces.IDataAccessSubsystem;
+
 import application.BrowseAndSelectController;
 import application.GuiUtil;
 
@@ -190,6 +196,13 @@ public class CatalogListWindow extends javax.swing.JWindow implements ParentWind
 		List<String[]> theData = new ArrayList<String[]>();
         if(USE_DEFAULT_DATA) {
 			theData = DefaultData.getCatalogTypes();
+        }
+        else{
+        	IProductSubsystem facade=new ProductSubsystemFacade();
+        	List<ICatalog> catalogs=facade.getAllCatalogs();
+        	for(ICatalog catalog:catalogs){
+        		theData.add(new String[]{catalog.getName()});
+        	}
         }
 		updateModel(theData);
  	}	

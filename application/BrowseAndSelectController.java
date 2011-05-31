@@ -5,9 +5,14 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+
+import business.externalinterfaces.IProductFromGui;
+import business.externalinterfaces.IProductSubsystem;
+import business.productsubsystem.ProductSubsystemFacade;
 
 import application.gui.CartItemsWindow;
 import application.gui.CatalogListWindow;
@@ -89,10 +94,7 @@ public enum BrowseAndSelectController implements CleanupControl {
 	
 	//control of ProductListWindow
 	class SelectProductListener implements ActionListener {
-		HashMap<String,String[]> readProductDetailsData() {
-			DefaultData productData = DefaultData.INSTANCE;
-			return productData.getProductDetailsData();	
-		}
+		
         public void actionPerformed(ActionEvent evt) {
         	JTable table = productListWindow.getTable();
         	int selectedRow = table.getSelectedRow();
@@ -100,8 +102,9 @@ public enum BrowseAndSelectController implements CleanupControl {
         	if(selectedRow >= 0) {
         		String type = (String)table.getValueAt(selectedRow,0);
         		System.out.println(type);
-        		HashMap<String,String[]> productTable = readProductDetailsData();
-        		String[] productParams = productTable.get(type);
+        		IProductSubsystem facade=new ProductSubsystemFacade();
+        		IProductFromGui product=facade.getProductByName(type);
+        		String[] productParams =new String[]{product.getProductName(),product.getUnitPrice(),product.getMfgDate(),product.getQuantityAvail()};
         		productDetailsWindow =  new ProductDetailsWindow(productParams);
         		productListWindow.setVisible(false);
         		productDetailsWindow.setVisible(true);

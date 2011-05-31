@@ -14,6 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import business.externalinterfaces.IProductFromGui;
+import business.externalinterfaces.IProductSubsystem;
+import business.productsubsystem.ProductSubsystemFacade;
+
 import application.BrowseAndSelectController;
 import application.GuiUtil;
 
@@ -202,6 +206,13 @@ public class ProductListWindow extends javax.swing.JWindow implements ParentWind
         if(USE_DEFAULT_DATA) {
 			DefaultData dd = DefaultData.INSTANCE;
 			theData = dd.getCatalogWindowData(catalogType);
+        }
+        else{
+        	IProductSubsystem facade=new ProductSubsystemFacade();
+        	List<IProductFromGui> products=facade.getProductByCatalog(catalogType);
+        	for(IProductFromGui product:products){
+        		theData.add(new String[]{product.getProductName(),product.getUnitPrice(),product.getMfgDate(),product.getQuantityAvail()});
+        	}
         }
 		updateModel(theData);
  	}		
