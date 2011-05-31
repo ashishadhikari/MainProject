@@ -39,6 +39,7 @@ public class OrderSubsystemFacade implements IOrderSubsystem {
 		return new DbClassOrder().getOrderData(orderId);
 	}
 
+	@Override
 	public List<IOrder> getOrderHistory() throws DatabaseException {
 		// implement -- finished
 		List<String> orderIds = getAllOrderIds();

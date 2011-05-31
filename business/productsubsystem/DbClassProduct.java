@@ -2,6 +2,10 @@ package business.productsubsystem;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.border.EmptyBorder;
 
 import middleware.DatabaseException;
 import middleware.DbConfigProperties;
@@ -21,16 +25,23 @@ class DbClassProduct implements IDbClass {
 	 * without extra db hits
 	 */
 	private static TwoKeyHashMap<String, String, IProductFromDb> productTable;
+	private List<IProductFromDb> productList = new ArrayList<IProductFromDb>();
+	private List<String[]> catalogNames = new ArrayList<String[]>();
 
 	private String queryType;
 	private String query;
+
 	private final String LOAD_PROD_TABLE = "LoadProdTable";
-	private final String LOAD_PROD_IDS = "LoadProdIds";
+	private final String LOAD_PROD_FROM_ID = "LoadProdIds";
+	private final String LOAD_PROD_FROM_NAME = "LoadProdFromName";
+	private final String LOAD_PROD_ID_FROM_NAME = "LoadProdIdFromName";
+	private final String GET_PROD_LIST = "LoadProdList";
 	private final String SAVE_PROD_TABLE = "SaveProdTable";
-	//private final String LOAD_CAT_TABLE = "LoadCatTable";
 	private final String SAVE_CAT_TABLE = "SaveCatTable";
-	private int productId = 1;
-	
+	private final String GET_CAT_NAMES = "GetCatNames";
+	private int productId;
+	private String catalogType;
+
 	// Product related variables
 	private String name;
 	private String quantity;
@@ -38,10 +49,15 @@ class DbClassProduct implements IDbClass {
 	private String date;
 	private String desc;
 	private int catid;
-	
+
 	// Catalog related variables
 	private String catalogName;
-	
+	private String productName;
+	private String productNameToSearch;
+
+	IProductFromDb productFromDb;
+	private String prodectIdFromName;
+
 	public static TwoKeyHashMap<String, String, IProductFromDb> getProductTable() {
 		return productTable;
 	}
@@ -56,16 +72,44 @@ class DbClassProduct implements IDbClass {
 		if (queryType.equals(LOAD_PROD_TABLE)) {
 			buildProdTableQuery();
 		}
-		if (queryType.equals(LOAD_PROD_IDS)) {
-			buildProdIdTableQuery();
+
+		if (queryType.equals(LOAD_PROD_FROM_ID)) {
+			buildProdFromIdQuery();
 		}
-		
-		if(queryType.equals(SAVE_PROD_TABLE)){
+
+		if (queryType.equals(LOAD_PROD_FROM_NAME)) {
+			buildProdFromNameQuery();
+		}
+
+		if (queryType.equals(LOAD_PROD_ID_FROM_NAME)) {
+			buildProdIdFromNameQuery();
+		}
+
+		if (queryType.equals(SAVE_PROD_TABLE)) {
 			buildSaveProductQuery();
 		}
-		if(queryType.equals(SAVE_CAT_TABLE)){
+
+		if (queryType.equals(SAVE_CAT_TABLE)) {
 			buildSaveCatalogQuery();
 		}
+
+		if (queryType.equals(GET_PROD_LIST)) {
+			buildGetProdListQuery();
+		}
+
+		if (queryType.equals(GET_CAT_NAMES)) {
+			buildGetCatNamesQuery();
+		}
+
+	}
+
+	private void buildGetCatNamesQuery() {
+		query = "SELECT * FROM CatalogType";
+	}
+
+	private void buildGetProdListQuery() {
+		query = "SELECT * FROM CatalogType as c INNER JOIN  Product as p ON c.catalogid =  p.catalogid WHERE catalogname='"
+				+ catalogType + "'";
 	}
 
 	private void buildSaveCatalogQuery() {
@@ -75,13 +119,80 @@ class DbClassProduct implements IDbClass {
 
 	private void buildSaveProductQuery() {
 		// TODO Auto-generated method stub
-		query = "INSERT INTO Product values(''," +catid+ ",'" + name+ "'," + quantity + "," + price + ",'" + date + "','" + desc+ "')";
-		
+		query = "INSERT INTO Product values(''," + catid + ",'" + name + "',"
+				+ quantity + "," + price + ",'" + date + "','" + desc + "')";
+
 	}
 
-	private void buildProdIdTableQuery() {
-		// TODO Auto-generated method stub
-		query = "SELECT * from Product where productid = "+this.productId;
+	private void buildProdFromNameQuery() {
+		query = "SELECT * from Product where productname = '" + this.productName+ "'";
+	}
+
+	private void buildProdFromIdQuery() {
+		query = "SELECT * from Product where productid = " + this.productId;
+	}
+
+	private void buildProdIdFromNameQuery() {
+		query = "SELECT * from Product where productname = '"
+				+ this.productNameToSearch + "'";
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<String[]> getCatalogNames() throws DatabaseException {
+		if (catalogNames.isEmpty()) {
+			queryType = GET_CAT_NAMES;
+			dataAccess = DataAccessSubsystemFacade.INSTANCE;
+			dataAccess.read(this);
+			return catalogNames;
+		}
+		return catalogNames;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @throws DatabaseException
+	 */
+	public List<String[]> refreshCatalogNames() throws DatabaseException {
+		queryType = GET_CAT_NAMES;
+		dataAccess = DataAccessSubsystemFacade.INSTANCE;
+		dataAccess.read(this);
+		return catalogNames;
+	}
+
+	/**
+	 * 
+	 * @param catType
+	 * @return
+	 * @throws DatabaseException
+	 */
+	public List<IProductFromDb> refreshProductList(String catType)
+			throws DatabaseException {
+		queryType = GET_PROD_LIST;
+		this.catalogType = catType;
+		dataAccess = DataAccessSubsystemFacade.INSTANCE;
+		dataAccess.read(this);
+		return productList;
+	}
+
+	/**
+	 * 
+	 * @param catType
+	 * @return
+	 */
+	public List<IProductFromDb> getProductList(String catType)
+			throws DatabaseException {
+		if ((productList.isEmpty())) {
+			queryType = GET_PROD_LIST;
+			this.catalogType = catType;
+			dataAccess = DataAccessSubsystemFacade.INSTANCE;
+			dataAccess.read(this);
+			return productList;
+		}
+		return productList;
 	}
 
 	/**
@@ -115,7 +226,7 @@ class DbClassProduct implements IDbClass {
 		this.desc = pro.getDescription();
 		this.catid = Integer.parseInt(str);
 		queryType = SAVE_PROD_TABLE;
-		
+
 		dataAccess = DataAccessSubsystemFacade.INSTANCE;
 		try {
 			dataAccess.save(this);
@@ -125,15 +236,46 @@ class DbClassProduct implements IDbClass {
 		}
 	}
 
-	public void getProductFromId(String prodId) {
-		this.queryType = LOAD_PROD_IDS;
+	/**
+	 * 
+	 * @param prodName
+	 * @return
+	 * @throws DatabaseException
+	 */
+	public String getProductIdFromName(String prodName)
+			throws DatabaseException {
+		this.queryType = LOAD_PROD_ID_FROM_NAME;
+		this.productNameToSearch = prodName;
+		DataAccessSubsystemFacade.INSTANCE.read(this);
+		return prodectIdFromName;
+	}
+
+	/**
+	 * 
+	 * @param prodId
+	 * @return
+	 * @throws DatabaseException
+	 */
+	public IProductFromDb getProductFromId(String prodId)
+			throws DatabaseException {
+		this.queryType = LOAD_PROD_FROM_ID;
 		this.productId = Integer.parseInt(prodId);
-		try {
-			DataAccessSubsystemFacade.INSTANCE.read(this);
-		} catch (DatabaseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		DataAccessSubsystemFacade.INSTANCE.read(this);
+		return productFromDb;
+	}
+
+	/**
+	 * 
+	 * @param prodName
+	 * @return
+	 * @throws DatabaseException
+	 */
+	public IProductFromDb getProductFromString(String prodName)
+			throws DatabaseException {
+		this.queryType = LOAD_PROD_FROM_NAME;
+		this.productName = prodName;
+		DataAccessSubsystemFacade.INSTANCE.read(this);
+		return productFromDb;
 	}
 
 	private void buildProdTableQuery() {
@@ -149,7 +291,9 @@ class DbClassProduct implements IDbClass {
 	}
 
 	/**
-	 * Force a database call
+	 * 
+	 * @return
+	 * @throws DatabaseException
 	 */
 	public TwoKeyHashMap<String, String, IProductFromDb> refreshProductTable()
 			throws DatabaseException {
@@ -170,15 +314,107 @@ class DbClassProduct implements IDbClass {
 	public void populateEntity(ResultSet resultSet) throws DatabaseException {
 		if (queryType.equals(LOAD_PROD_TABLE)) {
 			populateProdTable(resultSet);
+		} else if (queryType.equals(LOAD_PROD_FROM_ID)) {
+			populateProdFromId(resultSet);
+		} else if (queryType.equals(LOAD_PROD_FROM_NAME)) {
+			populateProdFromName(resultSet);
+		} else if (queryType.equals(LOAD_PROD_ID_FROM_NAME)) {
+			populateProdIdFromName(resultSet);
+		} else if (queryType.equals(GET_PROD_LIST)) {
+			populateProdList(resultSet);
+		} else if (queryType.equals(GET_CAT_NAMES)) {
+			populateCatalogList(resultSet);
 		}
 
 	}
 
-	private void populateProdTable(ResultSet rs) throws DatabaseException {
-		productTable = new TwoKeyHashMap<String, String, IProductFromDb>();
-		// implement
+	/**
+	 * 
+	 * @param rs
+	 * @throws DatabaseException
+	 */
+	private void populateCatalogList(ResultSet rs) throws DatabaseException {
+		catalogNames = new ArrayList<String[]>();
 		try {
-			while(rs.next()){
+
+			while (rs.next()) {
+				String[] catalogs = new String[2];
+				catalogs[0] = rs.getString("catalogid");
+				catalogs[1] = rs.getString("catalogname");
+				catalogNames.add(catalogs);
+			}
+		} catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+	}
+
+	/**
+	 * 
+	 * @param rs
+	 * @throws DatabaseException
+	 */
+	private void populateProdList(ResultSet rs) throws DatabaseException {
+		productList = new ArrayList<IProductFromDb>();
+		try {
+			while (rs.next()) {
+				String productid = rs.getString("productid");
+				String catalogid = rs.getString("catalogid");
+				String productname = rs.getString("productname");
+				String totalquantity = rs.getString("totalquantity");
+				String priceperunit = rs.getString("priceperunit");
+				String mfgdate = rs.getString("mfgdate");
+				String description = rs.getString("description");
+				
+				productList.add(new Product(productid, productname,
+						totalquantity, priceperunit, mfgdate, catalogid,
+						description));
+			}
+		} catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+
+	}
+
+	private void populateProdIdFromName(ResultSet rs) throws DatabaseException {
+		try {
+			while (rs.next()) {
+				prodectIdFromName = rs.getString("productid");
+			}
+		} catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+
+	}
+
+	private void populateProdFromName(ResultSet rs) throws DatabaseException {
+		try {
+			while (rs.next()) {
+				String productid = rs.getString("productid");
+				String catalogid = rs.getString("catalogid");
+				String productname = rs.getString("productname");
+				String totalquantity = rs.getString("totalquantity");
+				String priceperunit = rs.getString("priceperunit");
+				String mfgdate = rs.getString("mfgdate");
+				String description = rs.getString("description");
+				//System.out.println(productid);
+
+				productFromDb = new Product(productid, productname,
+						totalquantity, priceperunit, mfgdate, catalogid,
+						description);
+			}
+		} catch (SQLException e) {
+			throw new DatabaseException(e);
+		}
+	}
+
+	/**
+	 * 
+	 * @param rs
+	 * @throws DatabaseException
+	 */
+	private void populateProdFromId(ResultSet rs) throws DatabaseException {
+		try {
+			while (rs.next()) {
 				String productid = rs.getString("productid");
 				String catalogid = rs.getString("catalogid");
 				String productname = rs.getString("productname");
@@ -187,12 +423,40 @@ class DbClassProduct implements IDbClass {
 				String mfgdate = rs.getString("mfgdate");
 				String description = rs.getString("description");
 				System.out.println(productid);
-				Product p = new Product(productid, productname, totalquantity,  priceperunit,  mfgdate,  catalogid,  description);
+
+				productFromDb = new Product(productid, productname,
+						totalquantity, priceperunit, mfgdate, catalogid,
+						description);
+
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			throw new DatabaseException(e);
+		}
+
+	}
+
+	private void populateProdTable(ResultSet rs) throws DatabaseException {
+		productTable = new TwoKeyHashMap<String, String, IProductFromDb>();
+		// implement
+		try {
+			while (rs.next()) {
+				String productid = rs.getString("productid");
+				String catalogid = rs.getString("catalogid");
+				String productname = rs.getString("productname");
+				String totalquantity = rs.getString("totalquantity");
+				String priceperunit = rs.getString("priceperunit");
+				String mfgdate = rs.getString("mfgdate");
+				String description = rs.getString("description");
+				//System.out.println(productid);
+
+				Product p = new Product(productid, productname, totalquantity,
+						priceperunit, mfgdate, catalogid, description);
 				productTable.put(productid, productname, p);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new DatabaseException(e);
 		}
 
 	}
