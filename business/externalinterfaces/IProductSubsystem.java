@@ -6,6 +6,8 @@
  */
 package business.externalinterfaces;
 
+import java.util.List;
+
 import middleware.DatabaseException;
 import business.Quantity;
 import business.util.TwoKeyHashMap;
@@ -13,4 +15,9 @@ import business.util.TwoKeyHashMap;
 public interface IProductSubsystem {
 	public TwoKeyHashMap<String,String,IProductFromDb> getProductTable() throws DatabaseException;
 	public void readQuantityAvailable(String prodName, Quantity quantity) throws DatabaseException;
+	
+	public List<Catalog>getAllCatalogs();
+	public List<IProductFromGui>getProductByCatalog(String catalogType);
+	
+	public IProductFromGui getProductByName(String productName);
 }
