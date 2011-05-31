@@ -26,6 +26,7 @@ class DbClassProduct implements IDbClass {
 	 */
 	private static TwoKeyHashMap<String, String, IProductFromDb> productTable;
 	private List<IProductFromDb> productList;
+	private List<String[]> catalogNames;
 
 	private String queryType;
 	private String query;
@@ -37,6 +38,7 @@ class DbClassProduct implements IDbClass {
 	private final String GET_PROD_LIST = "LoadProdList";
 	private final String SAVE_PROD_TABLE = "SaveProdTable";
 	private final String SAVE_CAT_TABLE = "SaveCatTable";
+	private final String GET_CAT_NAMES = "GetCatNames";
 	private int productId;
 	private String catalogType;
 
@@ -95,6 +97,14 @@ class DbClassProduct implements IDbClass {
 			buildGetProdListQuery();
 		}
 
+		if (queryType.equals(GET_CAT_NAMES)) {
+			buildGetCatNamesQuery();
+		}
+
+	}
+
+	private void buildGetCatNamesQuery() {
+		query = "SELECT * FROM CatalogType";
 	}
 
 	private void buildGetProdListQuery() {
@@ -129,6 +139,32 @@ class DbClassProduct implements IDbClass {
 
 	/**
 	 * 
+	 * @return
+	 */
+	public List<String[]> getCatalogNames() throws DatabaseException {
+		if (catalogNames.isEmpty()) {
+			queryType = "GET_CAT_NAMES";
+			dataAccess = DataAccessSubsystemFacade.INSTANCE;
+			dataAccess.read(this);
+			return catalogNames;
+		}
+		return catalogNames;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @throws DatabaseException
+	 */
+	public List<String[]> refreshCatalogNames() throws DatabaseException {
+		queryType = "GET_CAT_NAMES";
+		dataAccess = DataAccessSubsystemFacade.INSTANCE;
+		dataAccess.read(this);
+		return catalogNames;
+	}
+
+	/**
+	 * 
 	 * @param catType
 	 * @return
 	 * @throws DatabaseException
@@ -153,7 +189,7 @@ class DbClassProduct implements IDbClass {
 			queryType = "GET_PROD_LIST";
 			this.catalogType = catType;
 			dataAccess = DataAccessSubsystemFacade.INSTANCE;
-			dataAccess.save(this);
+			dataAccess.read(this);
 			return productList;
 		}
 		return productList;
@@ -286,6 +322,29 @@ class DbClassProduct implements IDbClass {
 			populateProdIdFromName(resultSet);
 		} else if (queryType.equals(GET_PROD_LIST)) {
 			populateProdList(resultSet);
+		} else if (queryType.equals(GET_CAT_NAMES)) {
+			populateCatalogList(resultSet);
+		}
+
+	}
+
+	/**
+	 * 
+	 * @param rs
+	 * @throws DatabaseException
+	 */
+	private void populateCatalogList(ResultSet rs) throws DatabaseException {
+		catalogNames = new ArrayList<String[]>();
+		try {
+
+			while (rs.next()) {
+				String[] catalogs = new String[2];
+				catalogs[0] = rs.getString("catalogid");
+				catalogs[1] = rs.getString("catalogname");
+				catalogNames.add(catalogs);
+			}
+		} catch (SQLException e) {
+			throw new DatabaseException(e);
 		}
 	}
 
