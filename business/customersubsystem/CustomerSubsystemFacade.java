@@ -2,6 +2,7 @@ package business.customersubsystem;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 import middleware.DatabaseException;
 import middleware.EBazaarException;
@@ -16,6 +17,8 @@ import business.ordersubsystem.OrderSubsystemFacade;
 import business.shoppingcartsubsystem.ShoppingCartSubsystemFacade;
 
 public class CustomerSubsystemFacade implements ICustomerSubsystem {
+	private Logger logger=Logger.getLogger(CustomerSubsystemFacade.class.getName());
+	
 
 	IShoppingCartSubsystem shoppingCartSubsystem;
 	IOrderSubsystem orderSubsystem;
@@ -45,6 +48,7 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 
 	}
 
+
 	void loadCustomerProfile(String custId) throws DatabaseException {
 		DbClassCustomerProfile dbclass = new DbClassCustomerProfile();
 		dbclass.readCustomerProfile(custId);
@@ -54,20 +58,30 @@ public class CustomerSubsystemFacade implements ICustomerSubsystem {
 	void loadDefaultShipAddress() throws DatabaseException {
 		// implement
 		// replace this line with the real default ship address
-		defaultShipAddress = new Address();
+
+		DbClassAddress dbClass = new DbClassAddress();
+		dbClass.readDefaultShipAddress(customerProfile);
+		defaultShipAddress = dbClass.getDefaultShipAddress();
+
+
 	}
 
 	void loadDefaultBillAddress() throws DatabaseException {
 		// implement
 		// replace this line with the real default ship address
-		defaultBillAddress = new Address();
 
+		DbClassAddress dbClass = new DbClassAddress();
+		dbClass.readDefaultBillAddress(customerProfile);
+		defaultBillAddress = dbClass.getDefaultBillAddress();
 	}
 
 	void loadDefaultPaymentInfo() throws DatabaseException {
 		// implement
 		// replace this line with real data
-		defaultPaymentInfo = new CreditCard("", "", "", "");
+
+		DbClassCreditCard dbClass = new DbClassCreditCard();
+		dbClass.readDefaultPaymentInfo(customerProfile.getCustId());
+		defaultPaymentInfo = dbClass.getDefaultPaymentInfo();
 
 	}
 
