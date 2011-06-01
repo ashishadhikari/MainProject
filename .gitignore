@@ -1,3 +1,16 @@
 resources/dbconfig.properties
 .classpath
-*.class
+application/*.class
+application/gui/*.class
+business/*.class
+business/customersubsystem/*.class
+business/externalinterfaces/*.class
+business/ordersubsystem/*.class
+business/productsubsystem/*.class
+business/rulesbeans/*.class
+business/rulesubsystem/*.class
+business/shoppingcartsubsystem/*.class
+business/util/*.class
+middleware/*.class
+middleware/dataccess/*.class
+middleware/externalinterfaces/*.class
