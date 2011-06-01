@@ -30,6 +30,7 @@ public enum ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
 	String shopCartId;
 	ICustomerProfile customerProfile;
 	Logger log = Logger.getLogger(this.getClass().getPackage().getName());
+		
 
 	// interface methods
 	public void setCustomerProfile(ICustomerProfile customerProfile) {
@@ -44,9 +45,9 @@ public enum ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
 		// find this customer's shopping cart id
 		// finished
 		DbClassShoppingCart sc = new DbClassShoppingCart();
-//		DataAccessSubsystemFacade.INSTANCE.read(sc);
-//		return sc.getShoppingCartId(customerProfile.getCustId());
-		return "1";
+		//DataAccessSubsystemFacade.INSTANCE.read(sc);
+		return sc.getShoppingCartId(customerProfile.getCustId());
+		//return "1";
 	}
 
 	/**
@@ -131,4 +132,5 @@ public enum ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
 		DbClassShoppingCart sc = new DbClassShoppingCart(liveCart);
 		DataAccessSubsystemFacade.INSTANCE.save(sc);
 	}
+	
 }

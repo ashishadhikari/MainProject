@@ -11,7 +11,7 @@ public interface IOrder {
 	String getTotalPrice();
 
 	IAddress getBillingAddress();
-
+	
 	void setBillingAddress(IAddress billingAddress);
 
 	IAddress getShippingAddress();

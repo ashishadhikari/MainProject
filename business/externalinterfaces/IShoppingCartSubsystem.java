@@ -9,6 +9,7 @@ public interface IShoppingCartSubsystem {
 	 * used during customer login to cache this customer's saved cart --
 	 * performs a database access through data access subsystem
 	 */
+	
 	public IShoppingCartSubsystem retrieveSavedCart(ICustomerProfile custProfile)
 			throws DatabaseException;
 
