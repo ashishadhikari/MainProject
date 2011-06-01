@@ -59,7 +59,7 @@ public class ViewOrderDetailsWindow extends JWindow implements ParentWindow {
 	JPanel upper, middle, lower;
 	
 	//constants
-	private final boolean USE_DEFAULT_DATA = true;
+	private final boolean USE_DEFAULT_DATA = false;
 
     private final String ITEM = "Product";
     private final String QUANTITY = "Quantity";

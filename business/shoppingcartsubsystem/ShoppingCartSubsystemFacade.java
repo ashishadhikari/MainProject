@@ -44,10 +44,10 @@ public enum ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
 		// so that the sql query can extract custId in order to
 		// find this customer's shopping cart id
 		// finished
-		DbClassShoppingCart sc = new DbClassShoppingCart();
-		//DataAccessSubsystemFacade.INSTANCE.read(sc);
-		return sc.getShoppingCartId(customerProfile.getCustId());
-		//return "1";
+return new DbClassShoppingCart().getShoppingCartId(customerProfile
+				.getCustId());
+		// return "1";
+
 	}
 
 	/**
@@ -130,7 +130,7 @@ public enum ShoppingCartSubsystemFacade implements IShoppingCartSubsystem {
 	@Override
 	public void saveLiveCart() throws DatabaseException {
 		DbClassShoppingCart sc = new DbClassShoppingCart(liveCart);
-		DataAccessSubsystemFacade.INSTANCE.save(sc);
+		// TODO save sc
 	}
 	
 }

@@ -71,7 +71,7 @@ public class MaintainProductCatalog extends JWindow implements ParentWindow, ICo
 	String catalogGroup = DefaultData.BOOKS;
 	
 	//constants
-	private final boolean USE_DEFAULT_DATA = true;
+	private final boolean USE_DEFAULT_DATA = false;
 
     private final String NAME = "Name";
     private final String PRICE = "Unit Price";

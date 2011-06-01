@@ -24,6 +24,7 @@ import application.gui.MaintainCatalogTypes;
 import application.gui.MaintainProductCatalog;
 import business.SessionContext;
 import business.externalinterfaces.CustomerConstants;
+import business.externalinterfaces.IProductFromDb;
 import business.externalinterfaces.IProductFromGui;
 import business.productsubsystem.ProductSubsystemFacade;
 
@@ -279,10 +280,8 @@ public enum ManageProductsController implements CleanupControl  {
 	class SaveAddEditCatListener implements ActionListener {
         public void actionPerformed(ActionEvent evt) {
         	String name = "Cosmetics";
-//				JOptionPane.showMessageDialog(addEditCatalog, 
-//										  "Need to write code for this!", 
-//										  "Information", 
-//										  JOptionPane.INFORMATION_MESSAGE); 
+   	//TODO get the product ID from the event
+        	
         	ProductSubsystemFacade psf = new  ProductSubsystemFacade();
         	try {
 				psf.saveNewCatalogName(name);
@@ -308,7 +307,6 @@ public enum ManageProductsController implements CleanupControl  {
 	
 	class SaveAddEditProductListener implements ActionListener {
         public void actionPerformed(ActionEvent evt) {
-        	    String productId = "";
         	    String productName = "SE";
         	    String quantity = "50";
         	    String unitPrice = "2";
@@ -318,7 +316,7 @@ public enum ManageProductsController implements CleanupControl  {
         	    String catalogType = "1";
         	    
         		ProductSubsystemFacade psf = new ProductSubsystemFacade();
-        		IProductFromGui p = psf.createProduct(productId, productName, quantity, unitPrice, mfgDate, catalogId, description);
+        		IProductFromGui p = psf.createProduct(productName, mfgDate, quantity, unitPrice);
         		try {
 					psf.saveNewProduct(p,catalogType);
 				} catch (DatabaseException e) {

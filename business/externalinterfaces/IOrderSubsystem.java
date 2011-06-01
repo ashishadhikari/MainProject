@@ -22,8 +22,9 @@ public interface IOrderSubsystem {
 	/**
 	 * used whenever an order item needs to be created from outside the order
 	 * subsystem
+	 * @throws DatabaseException 
 	 */
 	IOrderItem createOrderItem(String prodId, String orderId,
-			String quantityReq, String totalPrice);
+			String quantityReq, String totalPrice) throws DatabaseException;
 
 }

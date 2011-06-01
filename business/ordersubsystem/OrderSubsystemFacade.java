@@ -24,6 +24,7 @@ public class OrderSubsystemFacade implements IOrderSubsystem {
 	}
 
 	List<String> getAllOrderIds() throws DatabaseException {
+		// finished implementing
 		return new DbClassOrder().getAllOrderIds(customerProfile);
 
 	}
@@ -38,6 +39,7 @@ public class OrderSubsystemFacade implements IOrderSubsystem {
 		return new DbClassOrder().getOrderData(orderId);
 	}
 
+	@Override
 	public List<IOrder> getOrderHistory() throws DatabaseException {
 		// implement -- finished
 		List<String> orderIds = getAllOrderIds();
@@ -51,7 +53,7 @@ public class OrderSubsystemFacade implements IOrderSubsystem {
 
 	@Override
 	public void submitOrder(IShoppingCart shopCart) throws DatabaseException {
-		// TODO Auto-generated method stub
+		// finished implementing
 		String orderId = DataAccessUtil.getNextAvailOrderId();
 		List<IOrderItem> orderItems = new ArrayList<IOrderItem>();
 		double totalPrice = 0;
@@ -70,14 +72,15 @@ public class OrderSubsystemFacade implements IOrderSubsystem {
 		for (IOrderItem orderItem : order.getOrderItems()) {
 			new DbClassOrderItem(orderItem).submitOrderItem();
 		}
-
 	}
 
 	@Override
 	public IOrderItem createOrderItem(String prodId, String orderId,
-			String quantityReq, String totalPrice) {
-		// TODO Auto-generated method stub
-		return null;
+			String quantityReq, String totalPrice) throws DatabaseException {
+		// implementation finished
+		return new OrderItem(
+				DataAccessUtil.getNextAvailOrderItemId(), prodId, orderId,
+				quantityReq, totalPrice);
 	}
 
 }

@@ -57,7 +57,7 @@ public class MaintainCatalogTypes extends javax.swing.JWindow implements ParentW
 	
 	//should be set to 'false' if data for table is obtained from a database
 	//or some external file
-	private final boolean USE_DEFAULT_DATA = true;
+	private final boolean USE_DEFAULT_DATA = false;
 	private final String ADD = "Add";
 	private final String EDIT = "Edit";
 	private final String DELETE = "Delete";
